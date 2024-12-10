@@ -1,0 +1,21 @@
+{
+  "name": "hodeo/car-reparations-app",
+  "description": "App to manage car reparations",
+  "type": "project",
+  "require": {
+    "monolog/monolog": "^3.8",
+    "intervention/image": "^3.9",
+    "ramsey/uuid": "^4.7"
+  },
+  "autoload": {
+    "psr-4": {
+      "Hodeo\\CarReparationsApp\\": "app/"
+    }
+  },
+  "authors": [
+    {
+      "name": "HodeonArtz",
+      "email": "martidicianolold@gmail.com"
+    }
+  ]
+}
