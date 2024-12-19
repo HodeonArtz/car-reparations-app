@@ -9,7 +9,8 @@
   },
   "autoload": {
     "psr-4": {
-      "Hodeo\\CarReparationsApp\\": "app/"
+      "App\\": "App/",
+      "Public\\": "public/"
     }
   },
   "authors": [
