@@ -78,7 +78,7 @@ $controllerForm->handleForm(
         <label for="reparationSearchId" class="form-label">Reparation ID: </label>
         </div>
         <div class="col-12">
-          <input type="number" name="reparationId" id="reparationSearchId">
+          <input type="number" name="reparationId" id="reparationSearchId" required min="0">
         </div>
         <div class="col-12">
           <button type="submit" class="btn btn-primary">Search</button>
