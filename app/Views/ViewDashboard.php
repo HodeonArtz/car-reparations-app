@@ -65,39 +65,47 @@ $controllerForm->handleForm(
 </head>
 
 <body>
+
   <?php (new ViewNav())->render(); // Should render only once?>
 
-  <main class="container py-4 gap-2">
-    <h1>
-      <?= $controllerUser->getFormattedRole()?>
+  <main class="container py-4 d-flex flex-column gap-2">
+    <h1 class="mb-3">
+      <?= $controllerUser->getFormattedRole()?>'s dashboard
     </h1>
-    <section>
-      <h2>Search for a car reparation</h2>
-      <form action="./ViewDashboard.php" method="post" class=" row row-cols-lg-auto g-3 align-items-center">
-        <input type="hidden" name="form_action" value="<?= ControllerForm::ACTIONS["GET_REPARATION"] ?>">
-        <label for="reparationSearchId" class="form-label">Reparation ID: </label>
-        </div>
-        <div class="col-12">
-          <input type="number" name="reparationId" id="reparationSearchId" required min="0">
-        </div>
-        <div class="col-12">
-          <button type="submit" class="btn btn-primary">Search</button>
-        </div>
-      </form>
-      <?php if($showReparation && $foundReparation) { ?>
-      <h3><?= (new ViewReparation())->render(reparation: $foundReparation) ?></h3>
-      <?php
-      }
-      ?>
+    <section class="d-flex flex-column gap-3">
+      <div class="form">
+        <h2>Search for a car reparation</h2>
+        <form action="./ViewDashboard.php" method="post" class=" row row-cols-lg-auto g-3 align-items-center">
+          <input type="hidden" name="form_action" value="<?= ControllerForm::ACTIONS["GET_REPARATION"] ?>">
+          <label for="reparationSearchId" class="form-label">Reparation ID: </label>
+          <div class="col-12">
+            <input type="number" name="reparationId" id="reparationSearchId" required min="0">
+          </div>
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary">Search</button>
+          </div>
+        </form>
+      </div>
+      <div class="result">
+        <?php if($showReparation && $foundReparation) { ?>
+        <?= (new ViewReparation())->render(reparation: $foundReparation) ?>
+        <?php
+          }
+          ?>
 
-      <?php if($showReparation && !$foundReparation) { ?>
-      <h3>No reparation was found.</h3>
-      <?php
-      }
-      ?>
-
-
+        <?php if($showReparation && !$foundReparation) { ?>
+        <div class="alert alert-danger d-flex align-items-center alert-dismissible fade show" role="alert">
+          <div>
+            No reparation was found.
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <?php
+          }
+          ?>
+      </div>
     </section>
+    <hr>
   </main>
 </body>
 

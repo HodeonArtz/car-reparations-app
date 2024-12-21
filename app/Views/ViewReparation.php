@@ -33,6 +33,7 @@ use DateTime;
       <b>License Plate: </b><?= $reparation->getLicensePlate() ?>
     </li>
   </ul>
+
 </div>
 <?php 
       }
