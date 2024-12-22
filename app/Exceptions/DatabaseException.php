@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Exceptions;
+use Exception;
 
-class DatabaseException extends \Exception
+class DatabaseException extends Exception
 {
-  protected int $code = 500;
+
 
   public function __construct(
     string $message = "There has been an error related to the database."
