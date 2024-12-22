@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Reparation;
 use App\Services\ServiceCarWorkshopDB;
 use DateTime;
+use Ramsey\Uuid\Uuid;
 
 class ServiceReparation
 {
@@ -43,6 +44,7 @@ class ServiceReparation
 
     $foundReparation = new Reparation(
       id: $response["id"], 
+      uuid: Uuid::fromString($response["uuid"]),
       workshop_name: $response["workshop_name"], 
       register_date: $register_date, 
       license_plate: $response["license_plate"]
