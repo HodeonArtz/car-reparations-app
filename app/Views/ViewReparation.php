@@ -24,6 +24,9 @@ use DateTime;
   </div>
   <ul class="list-group list-group-flush">
     <li class="list-group-item">
+      <b>UUID: </b><?= $reparation->getUUIDString() ?>
+    </li>
+    <li class="list-group-item">
       <b>Workshop: </b><?= $reparation->getWorkshopName() ?>
     </li>
     <li class="list-group-item">
