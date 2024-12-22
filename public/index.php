@@ -36,7 +36,7 @@ use App\Controllers\ControllerUser;
     <form action="../App/Views/ViewDashboard.php" method="GET" class=" row row-cols-lg-auto g-3 align-items-center">
       <input type="hidden" name="form_action" value="<?= ControllerForm::ACTIONS["SELECT_ROLE"] ?>">
       <div class="col-12">
-        <label for="userRole" class="form-label   ">Enter as: </label>
+        <label for="userRole" class="form-label">Enter as: </label>
       </div>
       <div class="col-12">
 
