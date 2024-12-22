@@ -5,10 +5,13 @@ namespace App\Services;
 use App\Models\Reparation;
 use App\Services\ServiceCarWorkshopDB;
 use DateTime;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 use Ramsey\Uuid\Uuid;
 
 class ServiceReparation
 {
+  private const OUTPUT_IMAGE_PATH = "../../resources/images/reparations/output-imgs/";
   private ServiceCarWorkshopDB $serviceDatabase;
   private ServiceUser $serviceUser;
 
@@ -17,6 +20,18 @@ class ServiceReparation
     $this->serviceUser = new ServiceUser();
   }
   public function maskReparation(Reparation $reparation): void{
+
+    $maskedPrefix = "masked-";
+
+    if(!file_exists(self::OUTPUT_IMAGE_PATH.$maskedPrefix. $reparation->getVehicleImageFilename())){
+      $imageManager = new ImageManager(new Driver());
+      $vehicleImage = $imageManager->read(self::OUTPUT_IMAGE_PATH. $reparation->getVehicleImageFilename());
+      $vehicleImage->blur(200);
+      $vehicleImage->toJpeg()->save(self::OUTPUT_IMAGE_PATH.$maskedPrefix. $reparation->getVehicleImageFilename());
+    }
+
+    $reparation->setVehicleImageFilename($maskedPrefix . $reparation->getVehicleImageFilename());
+
     $reparation->setLicensePlate(
       license_plate: substr(
             string: $reparation->getLicensePlate(),
@@ -47,7 +62,8 @@ class ServiceReparation
       uuid: Uuid::fromString($response["uuid"]),
       workshop_name: $response["workshop_name"], 
       register_date: $register_date, 
-      license_plate: $response["license_plate"]
+      license_plate: $response["license_plate"],
+      vehicle_image_filename: $response["vehicle_image_filename"]
     );
   
 
