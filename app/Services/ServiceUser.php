@@ -6,7 +6,10 @@ use App\Exceptions\InvalidRoleException;
 
 class ServiceUser
 {
-  const AVAILABLE_ROLES = ["employee","client"];
+  public const AVAILABLE_ROLES = [
+    "EMPLOYEE" => "employee", 
+    "CLIENT" => "client"
+  ];
 
   public function validateRole(string $role): bool {
     $formattedRole = strtolower(trim($role));

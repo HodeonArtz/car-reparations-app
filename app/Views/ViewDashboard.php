@@ -68,7 +68,7 @@ $controllerForm->handleForm(
 
   <?php (new ViewNav())->render(); // Should render only once?>
 
-  <main class="container py-4 d-flex flex-column gap-2">
+  <se class="container py-4 d-flex flex-column gap-2">
     <h1 class="mb-3">
       <?= $controllerUser->getFormattedRole()?>'s dashboard
     </h1>
@@ -106,7 +106,12 @@ $controllerForm->handleForm(
       </div>
     </section>
     <hr>
-  </main>
+    <section class="d-flex flex-column gap-3">
+      <div class="form">
+        <h2>Register a reparation</h2>
+      </div>
+    </section>
+  </se>
 </body>
 
 </html>

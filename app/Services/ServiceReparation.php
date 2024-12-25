@@ -67,7 +67,7 @@ class ServiceReparation
     );
   
 
-    if($this->serviceUser->getRole() === "client"){
+    if($this->serviceUser->getRole() === ServiceUser::AVAILABLE_ROLES["CLIENT"]){
       $this->maskReparation($foundReparation);
     }
 
