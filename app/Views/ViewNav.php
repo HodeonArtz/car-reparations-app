@@ -29,17 +29,16 @@ class ViewNav implements ViewBaseInterface
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="collapse navbar-collapse d-lg-flex flex-column flex-lg-row align-items-lg-center align-items-start"
+      id="navbarSupportedContent">
+      <h5 class="navbar-text order-lg-1">
+        <?= $this->controllerUser->getFormattedRole()?>
+      </h5>
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="<?= $indexPath ?>">Home</a>
         </li>
       </ul>
-
-
-      <h5 class="navbar-text">
-        <?= $this->controllerUser->getFormattedRole()?>
-      </h5>
     </div>
   </div>
 </nav>

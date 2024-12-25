@@ -107,8 +107,14 @@ $controllerForm->handleForm(
     </section>
     <hr>
     <section class="d-flex flex-column gap-3">
-      <div class="form">
+      <div class="form col-md-6 col-12">
         <h2>Register a reparation</h2>
+        <form action="">
+          <div class="mb-3">
+            <label for="formFile" class="form-label">Reparation photo</label>
+            <input class="form-control" type="file" id="formFile">
+          </div>
+        </form>
       </div>
     </section>
   </se>
