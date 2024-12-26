@@ -4,7 +4,8 @@
 
 use App\Controllers\ControllerForm;
 use App\Controllers\ControllerUser;
-  use App\Views\ViewNav;
+use App\Services\ServiceUser;
+use App\Views\ViewNav;
 
   $controllerUser = new ControllerUser();
 
@@ -41,8 +42,10 @@ use App\Controllers\ControllerUser;
       <div class="col-12">
 
         <select name="user-role" id="userRole" class="form-select">
-          <option value="client">Client</option>
-          <option value="employee">Employee</option>
+          <?php // Renders all the available "selectable" roles in the system ?>
+          <?php foreach (ServiceUser::AVAILABLE_ROLES as $role) { ?>
+          <option value="<?= $role ?>"><?= ucfirst($role) ?></option>
+          <?php } ?>
         </select>
       </div>
       <div class="col-12">
