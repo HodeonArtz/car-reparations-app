@@ -31,7 +31,7 @@ use App\Views\ViewNav;
 </head>
 
 <body>
-  <?php (new ViewNav())->render(indexPath: "#"); // Should render only once?>
+  <?php (new ViewNav(indexPath: "#"))->render(); // Should render only once?>
   <main class="container py-4 gap-2">
     <h1>Welcome!</h1>
     <form action="../App/Views/ViewDashboard.php" method="GET" class=" row row-cols-lg-auto g-3 align-items-center">

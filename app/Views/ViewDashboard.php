@@ -72,14 +72,16 @@ $controllerForm->handleForm(
     <h1 class="mb-3">
       <?= $controllerUser->getFormattedRole()?>'s dashboard
     </h1>
-    <section class="d-flex flex-column gap-3">
+    <section class="d-flex flex-column gap-3" id="search_form">
       <div class="form">
         <h2>Search for a car reparation</h2>
-        <form action="./ViewDashboard.php" method="post" class=" row row-cols-lg-auto g-3 align-items-center">
+        <form action="./ViewDashboard.php#search_form" method="post"
+          class=" row row-cols-lg-auto g-3 align-items-center">
           <input type="hidden" name="form_action" value="<?= ControllerForm::ACTIONS["GET_REPARATION"] ?>">
           <label for="reparationSearchId" class="form-label">Reparation ID: </label>
           <div class="col-12">
-            <input type="number" name="reparationId" id="reparationSearchId" required min="0">
+            <input type="number" name="reparationId" id="reparationSearchId" required min="0"
+              placeholder="Enter ID number">
           </div>
           <div class="col-12">
             <button type="submit" class="btn btn-primary">Search</button>
@@ -88,7 +90,7 @@ $controllerForm->handleForm(
       </div>
       <div class="result">
         <?php if($showReparation && $foundReparation) { ?>
-        <?= (new ViewReparation())->render(reparation: $foundReparation) ?>
+        <?= (new ViewReparation(reparation: $foundReparation))->render() ?>
         <?php
           }
           ?>
@@ -106,14 +108,25 @@ $controllerForm->handleForm(
       </div>
     </section>
     <hr>
-    <section class="d-flex flex-column gap-3">
+    <section class="d-flex flex-column gap-3" id="register-form">
       <div class="form col-md-6 col-12">
         <h2>Register a reparation</h2>
         <form action="">
           <div class="mb-3">
-            <label for="formFile" class="form-label">Reparation photo</label>
-            <input class="form-control" type="file" id="formFile">
+            <label for="upload_vehicle_image" class="form-label">Reparation photo</label>
+            <input class="form-control" type="file" id="vehicle_image_upload" required>
           </div>
+          <div class="mb-3">
+            <label for="add_workshop_name" class="form-label">Workshop name</label>
+            <input type="text" required maxlength="12" class="form-control" id="add_workshop_name"
+              placeholder="Enter workshop's name">
+          </div>
+          <div class="mb-3">
+            <label for="add_license_plate" class="form-label">Workshop name</label>
+            <input type="text" required maxlength="7" class="form-control" id="add_license_plate"
+              placeholder="Example: 1234-ABC">
+          </div>
+          <button type="submit" class="btn btn-primary">Register reparation</button>
         </form>
       </div>
     </section>
