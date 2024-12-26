@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 class ControllerForm
 {
-  const ACTIONS = [
+  public const ACTIONS = [
     "SELECT_ROLE" => "select_role",
     "GET_REPARATION" => "get_reparation"
   ];
