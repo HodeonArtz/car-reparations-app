@@ -37,7 +37,7 @@ class ServiceReparation
             string: $reparation->getLicensePlate(),
             offset: 0,
             length: 1
-          )."**-****"
+          )."***-***"
       );
   }
   public function getReparation(int $reparationId) : Reparation | null{
