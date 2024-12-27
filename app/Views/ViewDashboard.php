@@ -20,6 +20,12 @@ $handleSetRole = function () : void {
   $controllerUser->setRole();
 };
 
+$controllerForm->handleForm(
+  action: ControllerForm::ACTIONS["SELECT_ROLE"], 
+  functionHandler: $handleSetRole
+);
+
+
 $foundReparation = null;
 $showReparation = false;
 
@@ -33,19 +39,10 @@ $handleGetReparation = function () : void {
 };
 
 $controllerForm->handleForm(
-  action: ControllerForm::ACTIONS["SELECT_ROLE"], 
-  functionHandler: $handleSetRole
-);
-$controllerForm->handleForm(
   action: ControllerForm::ACTIONS["GET_REPARATION"], 
   functionHandler: $handleGetReparation
 );
-
-
 ?>
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -112,7 +109,7 @@ $controllerForm->handleForm(
       <!-- TODO: preview image upload -->
       <div class="form col-md-6 col-12">
         <h2>Register a reparation</h2>
-        <form action="">
+        <form action="./ViewDashboard.php#register-form">
           <div class="mb-3">
             <label for="upload_vehicle_image" class="form-label">Reparation photo</label>
             <input class="form-control" type="file" id="vehicle_image_upload" required>
