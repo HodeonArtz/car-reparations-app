@@ -5,6 +5,7 @@ require __DIR__ . '\\..\\..\\vendor\\autoload.php';
 use App\Controllers\ControllerForm;
 use App\Controllers\ControllerReparation;
 use App\Controllers\ControllerUser;
+use App\Services\ServiceUser;
 use App\Views\ViewReparation;
 
 
@@ -42,6 +43,9 @@ $controllerForm->handleForm(
   action: ControllerForm::ACTIONS["GET_REPARATION"], 
   functionHandler: $handleGetReparation
 );
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -104,6 +108,7 @@ $controllerForm->handleForm(
           ?>
       </div>
     </section>
+    <?php if($controllerUser->getCurrentRole() === ServiceUser::AVAILABLE_ROLES["EMPLOYEE"]){ ?>
     <hr>
     <section class="d-flex flex-column gap-3" id="register-form">
       <!-- TODO: preview image upload -->
@@ -128,6 +133,7 @@ $controllerForm->handleForm(
         </form>
       </div>
     </section>
+    <?php } ?>
   </main>
 </body>
 
