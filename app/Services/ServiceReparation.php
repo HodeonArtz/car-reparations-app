@@ -36,7 +36,7 @@ class ServiceReparation
       $vehicleImage = $imageManager->read(
         self::OUTPUT_IMAGE_PATH. $reparation->getVehicleImageFilename()
       );
-      $vehicleImage->blur(200);
+      $vehicleImage->scale(height:300)->blur(75);
       $vehicleImage->toWebp()->save(
         self::OUTPUT_IMAGE_PATH.$maskedPrefix. $reparation->getVehicleImageFilename()
       );
@@ -125,7 +125,7 @@ class ServiceReparation
 
     $imageManager = new ImageManager(new Driver());
     $vehicleImage = $imageManager->read($imageFile['tmp_name']);
-    $vehicleImage->text(
+    $vehicleImage->scale(height:300)->text(
       $licensePlate . " " . $random_uuid,
       12,
       12,

@@ -15,12 +15,11 @@ class ControllerUser
   public function validateRole() : void {
     if(
         !$this->serviceUser->getRole() &&
-        // !(isset($_GET["user-role"]) &&
-        $this->serviceUser->validateRole($_GET["user-role"]))
+        !$this->serviceUser->validateRole($_GET["user-role"]))
       {
-
-         header("Location: ../../public/index.php");
-        exit; 
+        
+          header("Location: ../../public/index.php");
+        exit;   
     }
   }
 

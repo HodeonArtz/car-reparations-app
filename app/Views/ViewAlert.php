@@ -2,8 +2,6 @@
 
 namespace App\Views;
 
-use App\Controllers\ControllerUser;
-
 /**
  * Creates an instance of a navigation component
  */
