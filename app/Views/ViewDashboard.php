@@ -137,16 +137,16 @@ $controllerForm->handleForm(
               id="add_license_plate" placeholder="Example: 1234-ABC">
           </div>
           <button type="submit" class="btn btn-primary">Register reparation</button>
-          <div class="result">
-            <?php 
-              if($showInsertSuccessMessage)
-                (new ViewAlert(
-                "Reparation succesfully registered. Register ID: " . $insertedReparationId,
-                  "success"
-                ))->render();
-            ?>
-          </div>
         </form>
+      </div>
+      <div class="result">
+        <?php 
+          if($showInsertSuccessMessage)
+            (new ViewAlert(
+            "Reparation succesfully registered. Reparation ID: " . $insertedReparationId,
+              "success"
+            ))->render();
+        ?>
       </div>
     </section>
     <?php } ?>
