@@ -7,6 +7,10 @@ use mysqli;
 
 class ServiceCarWorkshopDB
 {
+  /**
+   * Summary of database_config
+   * @var array{host:string, user:string, password:string, db_name:string,port:int}|bool
+   */
   private array | bool $database_config;
 
   public function __construct() {

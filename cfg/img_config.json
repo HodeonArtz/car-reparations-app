@@ -1,0 +1,5 @@
+{
+  "maxImgBytesSize": 6000000,
+
+  "validMimeFormats": ["image/jpeg", "image/png", "image/webp"]
+}

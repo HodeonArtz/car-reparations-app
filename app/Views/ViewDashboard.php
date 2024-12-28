@@ -44,7 +44,22 @@ $controllerForm->handleForm(
   functionHandler: $handleGetReparation
 );
 
+$insertedReparationId = 0;
+$showInsertSuccessMessage = false;
 
+$handleInsertReparation = function () : void {
+  global $controllerReparation;
+  global $insertedReparationId;
+  global $showInsertSuccessMessage;
+
+  $insertedReparationId = $controllerReparation->insertReparation();
+  $showInsertSuccessMessage = true;
+};
+
+$controllerForm->handleForm(
+  action: ControllerForm::ACTIONS["INSERT_REPARATION"],
+  functionHandler: $handleInsertReparation
+)
 
 ?>
 <!DOCTYPE html>
@@ -90,21 +105,12 @@ $controllerForm->handleForm(
         </form>
       </div>
       <div class="result">
-        <?php if($showReparation && $foundReparation) { ?>
-        <?= (new ViewReparation(reparation: $foundReparation))->render() ?>
-        <?php
-          }
-          ?>
-
-        <?php if($showReparation && !$foundReparation) { ?>
-        <div class="alert alert-danger d-flex align-items-center alert-dismissible fade show" role="alert">
-          <div>
-            No reparation was found.
-          </div>
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        <?php
-          }
+        <?php 
+          if($showReparation && $foundReparation) 
+            (new ViewReparation(reparation: $foundReparation))->render();
+          
+          if($showReparation && !$foundReparation) 
+            (new ViewAlert("No reparation was found.","danger"))->render();
           ?>
       </div>
     </section>
@@ -114,22 +120,32 @@ $controllerForm->handleForm(
       <!-- TODO: preview image upload -->
       <div class="form col-md-6 col-12">
         <h2>Register a reparation</h2>
-        <form action="./ViewDashboard.php#register-form">
+        <form action="./ViewDashboard.php#register-form" method="post" enctype="multipart/form-data">
+          <input type="hidden" name="form_action" value="<?= ControllerForm::ACTIONS["INSERT_REPARATION"] ?>">
           <div class="mb-3">
-            <label for="upload_vehicle_image" class="form-label">Reparation photo</label>
-            <input class="form-control" type="file" id="vehicle_image_upload" required>
+            <label for="vehicle_image_upload" class="form-label">Reparation photo</label>
+            <input class="form-control" type="file" name="vehicle_image_upload" id="vehicle_image_upload" required>
           </div>
           <div class="mb-3">
             <label for="add_workshop_name" class="form-label">Workshop name</label>
-            <input type="text" required maxlength="12" class="form-control" id="add_workshop_name"
-              placeholder="Enter workshop's name">
+            <input type="text" required maxlength="12" class="form-control" name="add_workshop_name"
+              id="add_workshop_name" placeholder="Enter workshop's name">
           </div>
           <div class="mb-3">
-            <label for="add_license_plate" class="form-label">Workshop name</label>
-            <input type="text" required maxlength="7" class="form-control" id="add_license_plate"
-              placeholder="Example: 1234-ABC">
+            <label for="add_license_plate" class="form-label">License name</label>
+            <input type="text" required maxlength="8" class="form-control" name="add_license_plate"
+              id="add_license_plate" placeholder="Example: 1234-ABC">
           </div>
           <button type="submit" class="btn btn-primary">Register reparation</button>
+          <div class="result">
+            <?php 
+              if($showInsertSuccessMessage)
+                (new ViewAlert(
+                "Reparation succesfully registered. Register ID: " . $insertedReparationId,
+                  "success"
+                ))->render();
+            ?>
+          </div>
         </form>
       </div>
     </section>

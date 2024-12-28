@@ -6,7 +6,8 @@ class ControllerForm
 {
   public const ACTIONS = [
     "SELECT_ROLE" => "select_role",
-    "GET_REPARATION" => "get_reparation"
+    "GET_REPARATION" => "get_reparation",
+    "INSERT_REPARATION" => "insert_reparation"
   ];
 
   public function handleForm(string $action,callable $functionHandler) : void {

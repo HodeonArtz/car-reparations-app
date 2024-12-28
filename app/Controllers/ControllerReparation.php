@@ -9,16 +9,22 @@ use App\Services\ServiceUser;
 
 class ControllerReparation
 {
-  private ServiceUser $serviceUser;
   private ServiceReparation $serviceReparation;
 
 
   public function __construct() {
-    $this->serviceUser = new ServiceUser(); 
     $this->serviceReparation = new ServiceReparation();
   }
   public function getReparation():  null | Reparation {
-    $reparation_id = $_POST["reparationId"];
+    $reparation_id = +$_POST["reparationId"];
     return $this->serviceReparation->getReparation($reparation_id);
+  }
+  public function insertReparation():  int  {
+    return $this->serviceReparation->insertReparation(
+      imageFile: $_FILES["vehicle_image_upload"],
+      workshopName: $_POST["add_workshop_name"],
+      licensePlate: $_POST["add_license_plate"]
+    );
+
   }
 }

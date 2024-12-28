@@ -2,22 +2,29 @@
 
 namespace App\Services;
 
+use App\Exceptions\FileException;
 use App\Models\Reparation;
 use App\Services\ServiceCarWorkshopDB;
 use DateTime;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
+use Intervention\Image\Typography\FontFactory;
 use Ramsey\Uuid\Uuid;
 
 class ServiceReparation
 {
   private const OUTPUT_IMAGE_PATH = "../../resources/images/reparations/output-imgs/";
+  /**
+   * @return array{maxImgBytesSize: int, validMimeFormats:string[]}
+   */
+  private array $IMG_CONFIG;
   private ServiceCarWorkshopDB $serviceDatabase;
   private ServiceUser $serviceUser;
 
   public function __construct() {
     $this->serviceDatabase = new ServiceCarWorkshopDB();
     $this->serviceUser = new ServiceUser();
+    $this->IMG_CONFIG = json_decode(file_get_contents("../../cfg/img_config.json"),true);
   }
   public function maskReparation(Reparation $reparation): void{
 
@@ -25,9 +32,14 @@ class ServiceReparation
 
     if(!file_exists(self::OUTPUT_IMAGE_PATH.$maskedPrefix. $reparation->getVehicleImageFilename())){
       $imageManager = new ImageManager(new Driver());
-      $vehicleImage = $imageManager->read(self::OUTPUT_IMAGE_PATH. $reparation->getVehicleImageFilename());
+
+      $vehicleImage = $imageManager->read(
+        self::OUTPUT_IMAGE_PATH. $reparation->getVehicleImageFilename()
+      );
       $vehicleImage->blur(200);
-      $vehicleImage->toJpeg()->save(self::OUTPUT_IMAGE_PATH.$maskedPrefix. $reparation->getVehicleImageFilename());
+      $vehicleImage->toWebp()->save(
+        self::OUTPUT_IMAGE_PATH.$maskedPrefix. $reparation->getVehicleImageFilename()
+      );
     }
 
     $reparation->setVehicleImageFilename($maskedPrefix . $reparation->getVehicleImageFilename());
@@ -72,5 +84,75 @@ class ServiceReparation
     }
 
     return $foundReparation;
+  }
+
+  /**
+   * 
+   * @param array{type:string,size:int,tmp_name:string} $imageFile
+   * @param string $workshopName
+   * @param string $licensePlate
+   * @return int|null
+   */
+  public function insertReparation(
+    array $imageFile,
+    string $workshopName,
+    string $licensePlate
+  ): int {
+    // TOO: validate all parameters, create exceptions, create random UUID, save image locally, register reparation and return its id 
+    if(!in_array(
+      $imageFile['type'],
+      $this->IMG_CONFIG['validMimeFormats']
+      ))
+      throw new FileException(
+        "The image must be of type: " . 
+        implode(", ",$this->IMG_CONFIG['validMimeFormats']) .
+        "."
+      );
+    
+    if($imageFile['size'] > $this->IMG_CONFIG['maxImgBytesSize'])
+      throw new FileException("This image exceeds the size limit (6MB).");
+
+    $mysqli = $this->serviceDatabase->connectDatabase();
+    $insertSentence = $mysqli->prepare(query: 
+      "INSERT INTO reparations 
+        (uuid,workshop_name,license_plate,vehicle_image_filename)
+      VALUES 
+          (?,?,?,?);
+      "
+    );
+
+    $random_uuid = Uuid::uuid4()->toString();
+
+    $imageManager = new ImageManager(new Driver());
+    $vehicleImage = $imageManager->read($imageFile['tmp_name']);
+    $vehicleImage->text(
+      $licensePlate . " " . $random_uuid,
+      12,
+      12,
+      function (FontFactory $font): void {
+        $font->file("../../resources/fonts/segoe-ui.ttf");
+        $font->size(24);
+        $font->color("ffffff");
+        $font->stroke("000000", 2);
+        $font->align("left");
+        $font->valign("top");
+        $font->angle(0);
+      }
+    );
+    $vehicleImageOutFilename = $random_uuid . ".webp";
+
+    $vehicleImage->toWebp()->save(self::OUTPUT_IMAGE_PATH . $vehicleImageOutFilename);
+
+    $insertSentence->bind_param(
+      "ssss",
+      $random_uuid,
+      $workshopName,
+      $licensePlate,
+      $vehicleImageOutFilename
+    );
+
+    $insertSentence->execute();
+
+    return $mysqli->insert_id;
   }
 }
