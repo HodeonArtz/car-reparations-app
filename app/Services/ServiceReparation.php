@@ -98,7 +98,6 @@ class ServiceReparation
     string $workshopName,
     string $licensePlate
   ): int {
-    // TOO: validate all parameters, create exceptions, create random UUID, save image locally, register reparation and return its id 
     if(!in_array(
       $imageFile['type'],
       $this->IMG_CONFIG['validMimeFormats']
