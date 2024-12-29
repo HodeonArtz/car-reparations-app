@@ -96,8 +96,8 @@ $controllerForm->handleForm(
           <input type="hidden" name="form_action" value="<?= ControllerForm::ACTIONS["GET_REPARATION"] ?>">
           <label for="reparationSearchId" class="form-label">Reparation ID: </label>
           <div class="col-12">
-            <input type="number" name="reparationId" id="reparationSearchId" required min="0"
-              placeholder="Enter ID number">
+            <input type="number" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="reparationId"
+              id="reparationSearchId" required min="0" max="2147483647" placeholder="Enter ID number">
           </div>
           <div class="col-12">
             <button type="submit" class="btn btn-primary">Search</button>
