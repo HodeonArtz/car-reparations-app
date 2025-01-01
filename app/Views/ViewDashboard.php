@@ -8,12 +8,11 @@ use App\Controllers\ControllerUser;
 use App\Services\ServiceUser;
 use App\Views\ViewReparation;
 
-
-$controllerForm = new ControllerForm();
 $controllerUser = new ControllerUser();
+$controllerForm = new ControllerForm();
 $controllerReparation = new ControllerReparation();
 
-
+// ---- Handle user roles
 $handleSetRole = function () : void {
   global $controllerUser;
   
@@ -25,8 +24,9 @@ $controllerForm->handleForm(
   action: ControllerForm::ACTIONS["SELECT_ROLE"], 
   functionHandler: $handleSetRole
 );
+// ----------------------------
 
-
+// ---- Get and view reparation
 $foundReparation = null;
 $showReparation = false;
 
@@ -43,7 +43,9 @@ $controllerForm->handleForm(
   action: ControllerForm::ACTIONS["GET_REPARATION"], 
   functionHandler: $handleGetReparation
 );
+// ----------------------------
 
+// ---- Insert reparation
 $insertedReparationId = 0;
 $showInsertSuccessMessage = false;
 
@@ -59,7 +61,12 @@ $handleInsertReparation = function () : void {
 $controllerForm->handleForm(
   action: ControllerForm::ACTIONS["INSERT_REPARATION"],
   functionHandler: $handleInsertReparation
-)
+);
+// ----------------------------
+
+
+$controllerUser->restrictPageToVisitors();
+
 
 ?>
 <!DOCTYPE html>

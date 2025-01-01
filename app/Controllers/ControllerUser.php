@@ -40,4 +40,11 @@ class ControllerUser
   public function resetRole():void {
     $this->serviceUser->unsetRole();
   }
+
+  public function restrictPageToVisitors(): void {
+    if(!$this->serviceUser->getRole()){
+      header("Location: ../../public/index.php");
+      exit;  
+    }
+  }
 }
