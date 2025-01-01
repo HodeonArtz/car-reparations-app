@@ -14,6 +14,11 @@ $controllerUser = new ControllerUser();
 $controllerForm = new ControllerForm();
 $controllerReparation = new ControllerReparation();
 
+/**
+ * @var ViewAlert[]
+ */
+$errorAlerts = [];
+
 // ---- Handle user roles
 $handleSetRole = function () : void {
   global $controllerUser;
@@ -42,9 +47,17 @@ $handleGetReparation = function () : void {
   global $controllerReparation;
   global $foundReparation;
   global $showReparation;
+  global $errorAlerts;
 
-  $foundReparation = $controllerReparation->getReparation();
-  $showReparation = true;
+  try {
+    $foundReparation = $controllerReparation->getReparation();
+    $showReparation = true;
+  } catch (\Throwable $th) {
+    array_push(
+      $errorAlerts, 
+      new ViewAlert($th->getMessage(),"danger")
+    );
+  }
 };
 
 $controllerForm->handleForm(
@@ -62,8 +75,15 @@ $handleInsertReparation = function () : void {
   global $insertedReparationId;
   global $showInsertSuccessMessage;
 
-  $insertedReparationId = $controllerReparation->insertReparation();
-  $showInsertSuccessMessage = true;
+  try {
+    $insertedReparationId = $controllerReparation->insertReparation();
+    $showInsertSuccessMessage = true;
+  } catch (\Throwable $th) {
+    array_push(
+      $errorAlerts, 
+      new ViewAlert($th->getMessage(),"danger")
+    );
+  }
 };
 
 $controllerForm->handleForm(
@@ -103,6 +123,11 @@ $controllerUser->restrictPageToVisitors();
     <h1 class="mb-3">
       <?= $controllerUser->getFormattedRole()?>'s dashboard
     </h1>
+    <?php 
+      foreach ($errorAlerts as $errorAlert) {
+        $errorAlert->render();
+      }
+    ?>
     <section class="d-flex flex-column gap-3" id="search_form">
       <div class="form">
         <h2>Search for a car reparation</h2>
