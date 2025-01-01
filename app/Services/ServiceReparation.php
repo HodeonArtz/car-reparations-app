@@ -9,6 +9,9 @@ use DateTime;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Typography\FontFactory;
+use Monolog\Handler\StreamHandler;
+use Monolog\Level;
+use Monolog\Logger;
 use Ramsey\Uuid\Uuid;
 
 class ServiceReparation
@@ -53,31 +56,36 @@ class ServiceReparation
       );
   }
   public function getReparation(int $reparationId) : Reparation | null{
+    $log = new Logger("Car Workshop DB");
+    $log->pushHandler(new StreamHandler("../../logs/car-workshop-db.log", Level::Info));
     $mysqli = $this->serviceDatabase->connectDatabase();
     
-    // TODO: get result from select
-    $reparationSentence = $mysqli->prepare("SELECT * FROM reparations WHERE id = ?");
-    $reparationSentence->bind_param("i", $reparationId);
-    $reparationSentence->execute();
-
-    $result = $reparationSentence->get_result();
-
-    if($result->num_rows === 0)
-      return null;
-
-    $response = $result->fetch_assoc();
-
-    $register_date = DateTime::createFromFormat("Y-m-d", $response["register_date"]);
-
-    $foundReparation = new Reparation(
-      id: $response["id"], 
-      uuid: Uuid::fromString($response["uuid"]),
-      workshop_name: $response["workshop_name"], 
-      register_date: $register_date, 
-      license_plate: $response["license_plate"],
-      vehicle_image_filename: $response["vehicle_image_filename"]
-    );
+    try {
+      $reparationSentence = $mysqli->prepare("SELECT * FROM reparations WHERE id = ?");
+      $reparationSentence->bind_param("i", $reparationId);
+      $reparationSentence->execute();
   
+      $result = $reparationSentence->get_result();
+      $log->info("SELECT reparation");
+
+      if($result->num_rows === 0)
+        return null;
+  
+      $response = $result->fetch_assoc();
+  
+      $register_date = DateTime::createFromFormat("Y-m-d", $response["register_date"]);
+  
+      $foundReparation = new Reparation(
+        id: $response["id"], 
+        uuid: Uuid::fromString($response["uuid"]),
+        workshop_name: $response["workshop_name"], 
+        register_date: $register_date, 
+        license_plate: $response["license_plate"],
+        vehicle_image_filename: $response["vehicle_image_filename"]
+      );
+    } catch (\Throwable $th) {
+      $log->warning("There has been an error selecting a reparation: ". $th->getMessage());
+    }
 
     if($this->serviceUser->getRole() === ServiceUser::AVAILABLE_ROLES["CLIENT"]){
       $this->maskReparation($foundReparation);
