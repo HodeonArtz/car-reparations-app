@@ -20,7 +20,7 @@ class ServiceCarWorkshopDB
     $this->database_config = parse_ini_file("../../cfg/db_config.ini");
   }
   public function connectDatabase(): mysqli {
-    $log = new Logger("Car Workshop DB");
+    $log = new Logger("Car_Workshop_DB_Connection");
     $log->pushHandler(new StreamHandler("../../logs/car-workshop-db.log", Level::Info));
   
     try {

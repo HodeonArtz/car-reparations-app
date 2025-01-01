@@ -56,7 +56,7 @@ class ServiceReparation
       );
   }
   public function getReparation(int $reparationId) : Reparation | null{
-    $log = new Logger("Car Workshop DB");
+    $log = new Logger("Car_Workshop_SELECT");
     $log->pushHandler(new StreamHandler("../../logs/car-workshop-db.log", Level::Info));
     $mysqli = $this->serviceDatabase->connectDatabase();
     
@@ -66,7 +66,7 @@ class ServiceReparation
       $reparationSentence->execute();
   
       $result = $reparationSentence->get_result();
-      $log->info("SELECT reparation");
+      $log->info("SELECT reparation, ID: $reparationId");
 
       if($result->num_rows === 0)
         return null;
@@ -120,45 +120,54 @@ class ServiceReparation
       throw new FileException("This image exceeds the size limit (6MB).");
 
     $mysqli = $this->serviceDatabase->connectDatabase();
-    $insertSentence = $mysqli->prepare(query: 
-      "INSERT INTO reparations 
-        (uuid,workshop_name,license_plate,vehicle_image_filename)
-      VALUES 
-          (?,?,?,?);
-      "
-    );
 
-    $random_uuid = Uuid::uuid4()->toString();
-
-    $imageManager = new ImageManager(new Driver());
-    $vehicleImage = $imageManager->read($imageFile['tmp_name']);
-    $vehicleImage->scale(height:300)->text(
-      $licensePlate . " " . $random_uuid,
-      12,
-      12,
-      function (FontFactory $font): void {
-        $font->file("../../resources/fonts/segoe-ui.ttf");
-        $font->size(24);
-        $font->color("ffffff");
-        $font->stroke("000000", 2);
-        $font->align("left");
-        $font->valign("top");
-        $font->angle(0);
-      }
-    );
-    $vehicleImageOutFilename = $random_uuid . ".webp";
-
-    $vehicleImage->toWebp()->save(self::OUTPUT_IMAGE_PATH . $vehicleImageOutFilename);
-
-    $insertSentence->bind_param(
-      "ssss",
-      $random_uuid,
-      $workshopName,
-      $licensePlate,
-      $vehicleImageOutFilename
-    );
-
-    $insertSentence->execute();
+    try {
+      $log = new Logger("Car_Workshop_INSERT");
+      $log->pushHandler(new StreamHandler("../../logs/car-workshop-db.log", Level::Info));
+      $insertSentence = $mysqli->prepare(query: 
+        "INSERT INTO reparations 
+          (uuid,workshop_name,license_plate,vehicle_image_filename)
+        VALUES 
+            (?,?,?,?);
+        "
+      );
+  
+      $random_uuid = Uuid::uuid4()->toString();
+  
+      $imageManager = new ImageManager(new Driver());
+      $vehicleImage = $imageManager->read($imageFile['tmp_name']);
+      $vehicleImage->scale(height:300)->text(
+        $licensePlate . " " . $random_uuid,
+        12,
+        12,
+        function (FontFactory $font): void {
+          $font->file("../../resources/fonts/segoe-ui.ttf");
+          $font->size(24);
+          $font->color("ffffff");
+          $font->stroke("000000", 2);
+          $font->align("left");
+          $font->valign("top");
+          $font->angle(0);
+        }
+      );
+      $vehicleImageOutFilename = $random_uuid . ".webp";
+  
+      $vehicleImage->toWebp()->save(self::OUTPUT_IMAGE_PATH . $vehicleImageOutFilename);
+  
+      $insertSentence->bind_param(
+        "ssss",
+        $random_uuid,
+        $workshopName,
+        $licensePlate,
+        $vehicleImageOutFilename
+      );
+  
+      $insertSentence->execute();
+      $log->info("INSERT reparation, ID: ". $mysqli->insert_id);
+    } catch (\Throwable $th) {
+      $log->error("There has been an error inserting a reparation: ". $th->getMessage());
+      
+    }
 
     return $mysqli->insert_id;
   }
