@@ -2,12 +2,14 @@
 namespace App\Views;
 require __DIR__ . '\\..\\..\\vendor\\autoload.php';
 
+use App\Controllers\ControllerError;
 use App\Controllers\ControllerForm;
 use App\Controllers\ControllerReparation;
 use App\Controllers\ControllerUser;
 use App\Services\ServiceUser;
 use App\Views\ViewReparation;
 
+$controllerError = new ControllerError();
 $controllerUser = new ControllerUser();
 $controllerForm = new ControllerForm();
 $controllerReparation = new ControllerReparation();
@@ -15,9 +17,15 @@ $controllerReparation = new ControllerReparation();
 // ---- Handle user roles
 $handleSetRole = function () : void {
   global $controllerUser;
+  global $controllerError;
   
-  $controllerUser->validateRole();
-  $controllerUser->setRole();
+  try {
+    $controllerUser->validateRole();
+    $controllerUser->setRole();
+  } catch (\Throwable $error) {
+    $controllerError->redirectErrorTo("../../public/index.php",$error);
+  }
+  
 };
 
 $controllerForm->handleForm(
