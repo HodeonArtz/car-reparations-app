@@ -57,7 +57,7 @@ class ServiceReparation
   }
   public function getReparation(int $reparationId) : Reparation | null{
     $log = new Logger("Car_Workshop_SELECT");
-    $log->pushHandler(new StreamHandler("../../logs/car-workshop-db.log", Level::Info));
+    $log->pushHandler(new StreamHandler("../../logs/app_workshop.log", Level::Info));
     $mysqli = $this->serviceDatabase->connectDatabase();
     
     try {
@@ -123,7 +123,7 @@ class ServiceReparation
 
     try {
       $log = new Logger("Car_Workshop_INSERT");
-      $log->pushHandler(new StreamHandler("../../logs/car-workshop-db.log", Level::Info));
+      $log->pushHandler(new StreamHandler("../../logs/app_workshop.log", Level::Info));
       $insertSentence = $mysqli->prepare(query: 
         "INSERT INTO reparations 
           (uuid,workshop_name,license_plate,vehicle_image_filename)

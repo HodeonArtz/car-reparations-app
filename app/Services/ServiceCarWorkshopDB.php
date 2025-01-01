@@ -21,7 +21,7 @@ class ServiceCarWorkshopDB
   }
   public function connectDatabase(): mysqli {
     $log = new Logger("Car_Workshop_DB_Connection");
-    $log->pushHandler(new StreamHandler("../../logs/car-workshop-db.log", Level::Info));
+    $log->pushHandler(new StreamHandler("../../logs/app_workshop.log", Level::Info));
   
     try {
       $mysqli = new mysqli(
