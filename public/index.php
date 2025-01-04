@@ -1,6 +1,8 @@
-<?php 
-  namespace Public;
-  require __DIR__ . '/../vendor/autoload.php';
+<?php
+
+namespace Public;
+
+require __DIR__ . '/../vendor/autoload.php';
 
 use App\Controllers\ControllerError;
 use App\Controllers\ControllerForm;
@@ -9,10 +11,10 @@ use App\Services\ServiceUser;
 use App\Views\ViewAlert;
 use App\Views\ViewNav;
 
-  $controllerError = new ControllerError(); 
-  $controllerUser = new ControllerUser();
+$controllerError = new ControllerError();
+$controllerUser = new ControllerUser();
 
-  $controllerUser->resetRole();
+$controllerUser->resetRole();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -34,15 +36,16 @@ use App\Views\ViewNav;
 </head>
 
 <body>
-  <?php (new ViewNav(indexPath: "#"))->render(); // Should render only once?>
+  <?php (new ViewNav(indexPath: "#"))->render(); // Should render only once
+  ?>
   <main class="container py-4 gap-2">
     <h1>Welcome!</h1>
-    <?php 
-      try {
-        $controllerError->checkErrors(); ?>
-    <?php } catch (\Throwable $th) { 
-        (new ViewAlert($th->getMessage(), "danger"))->render();
-     } ?>
+    <?php
+    try {
+      $controllerError->checkErrors(); ?>
+    <?php } catch (\Throwable $th) {
+      (new ViewAlert($th->getMessage(), "danger"))->render();
+    } ?>
     <form action="../App/Views/ViewDashboard.php" method="GET" class=" row row-cols-lg-auto g-3 align-items-center">
       <input type="hidden" name="form_action" value="<?= ControllerForm::ACTIONS["SELECT_ROLE"] ?>">
       <div class="col-12">
@@ -50,9 +53,10 @@ use App\Views\ViewNav;
       </div>
       <div class="col-12">
         <select name="user-role" id="userRole" class="form-select">
-          <?php // Renders all the available "selectable" roles in the system ?>
+          <?php // Renders all the available "selectable" roles in the system 
+          ?>
           <?php foreach (ServiceUser::AVAILABLE_ROLES as $role) { ?>
-          <option value="<?= $role ?>"><?= ucfirst($role) ?></option>
+            <option value="<?= $role ?>"><?= ucfirst($role) ?></option>
           <?php } ?>
         </select>
       </div>

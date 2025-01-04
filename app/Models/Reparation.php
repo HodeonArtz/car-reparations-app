@@ -9,14 +9,11 @@ use Ramsey\Uuid\Uuid;
 class Reparation
 {
   private int $id;
-  // TODO: Implement later
-   private UuidInterface $uuid;
+  private UuidInterface $uuid;
   private string $workshop_name;
   private DateTime $register_date;
   private string $license_plate;
   private string $vehicle_image_filename;
-  // TODO: Implement later
-  // private int $vehicle_image;
 
   public function __construct(
     int $id,

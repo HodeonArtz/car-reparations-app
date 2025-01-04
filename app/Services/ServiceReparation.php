@@ -24,24 +24,26 @@ class ServiceReparation
   private ServiceCarWorkshopDB $serviceDatabase;
   private ServiceUser $serviceUser;
 
-  public function __construct() {
+  public function __construct()
+  {
     $this->serviceDatabase = new ServiceCarWorkshopDB();
     $this->serviceUser = new ServiceUser();
-    $this->IMG_CONFIG = json_decode(file_get_contents("../../cfg/img_config.json"),true);
+    $this->IMG_CONFIG = json_decode(file_get_contents("../../cfg/img_config.json"), true);
   }
-  public function maskReparation(Reparation $reparation): void{
+  public function maskReparation(Reparation $reparation): void
+  {
 
     $maskedPrefix = "masked-";
 
-    if(!file_exists(self::OUTPUT_IMAGE_PATH.$maskedPrefix. $reparation->getVehicleImageFilename())){
+    if (!file_exists(self::OUTPUT_IMAGE_PATH . $maskedPrefix . $reparation->getVehicleImageFilename())) {
       $imageManager = new ImageManager(new Driver());
 
       $vehicleImage = $imageManager->read(
-        self::OUTPUT_IMAGE_PATH. $reparation->getVehicleImageFilename()
+        self::OUTPUT_IMAGE_PATH . $reparation->getVehicleImageFilename()
       );
-      $vehicleImage->scale(height:300)->blur(75);
+      $vehicleImage->scale(height: 300)->blur(75);
       $vehicleImage->toWebp()->save(
-        self::OUTPUT_IMAGE_PATH.$maskedPrefix. $reparation->getVehicleImageFilename()
+        self::OUTPUT_IMAGE_PATH . $maskedPrefix . $reparation->getVehicleImageFilename()
       );
     }
 
@@ -49,45 +51,46 @@ class ServiceReparation
 
     $reparation->setLicensePlate(
       license_plate: substr(
-            string: $reparation->getLicensePlate(),
-            offset: 0,
-            length: 1
-          )."***-***"
-      );
+        string: $reparation->getLicensePlate(),
+        offset: 0,
+        length: 1
+      ) . "***-***"
+    );
   }
-  public function getReparation(int $reparationId) : Reparation | null{
+  public function getReparation(int $reparationId): Reparation | null
+  {
     $log = new Logger("Car_Workshop_SELECT");
     $log->pushHandler(new StreamHandler("../../logs/app_workshop.log", Level::Info));
     $mysqli = $this->serviceDatabase->connectDatabase();
-    
+
     try {
       $reparationSentence = $mysqli->prepare("SELECT * FROM reparations WHERE id = ?");
       $reparationSentence->bind_param("i", $reparationId);
       $reparationSentence->execute();
-  
+
       $result = $reparationSentence->get_result();
       $log->info("SELECT reparation, ID: $reparationId");
 
-      if($result->num_rows === 0)
+      if ($result->num_rows === 0)
         return null;
-  
+
       $response = $result->fetch_assoc();
-  
+
       $register_date = DateTime::createFromFormat("Y-m-d", $response["register_date"]);
-  
+
       $foundReparation = new Reparation(
-        id: $response["id"], 
+        id: $response["id"],
         uuid: Uuid::fromString($response["uuid"]),
-        workshop_name: $response["workshop_name"], 
-        register_date: $register_date, 
+        workshop_name: $response["workshop_name"],
+        register_date: $register_date,
         license_plate: $response["license_plate"],
         vehicle_image_filename: $response["vehicle_image_filename"]
       );
     } catch (\Throwable $th) {
-      $log->warning("There has been an error selecting a reparation: ". $th->getMessage());
+      $log->warning("There has been an error selecting a reparation: " . $th->getMessage());
     }
 
-    if($this->serviceUser->getRole() === ServiceUser::AVAILABLE_ROLES["CLIENT"]){
+    if ($this->serviceUser->getRole() === ServiceUser::AVAILABLE_ROLES["CLIENT"]) {
       $this->maskReparation($foundReparation);
     }
 
@@ -106,17 +109,17 @@ class ServiceReparation
     string $workshopName,
     string $licensePlate
   ): int {
-    if(!in_array(
+    if (!in_array(
       $imageFile['type'],
       $this->IMG_CONFIG['validMimeFormats']
-      ))
+    ))
       throw new FileException(
-        "The image must be of type: " . 
-        implode(", ",$this->IMG_CONFIG['validMimeFormats']) .
-        "."
+        "The image must be of type: " .
+          implode(", ", $this->IMG_CONFIG['validMimeFormats']) .
+          "."
       );
-    
-    if($imageFile['size'] > $this->IMG_CONFIG['maxImgBytesSize'])
+
+    if ($imageFile['size'] > $this->IMG_CONFIG['maxImgBytesSize'])
       throw new FileException("This image exceeds the size limit (6MB).");
 
     $mysqli = $this->serviceDatabase->connectDatabase();
@@ -124,19 +127,19 @@ class ServiceReparation
     try {
       $log = new Logger("Car_Workshop_INSERT");
       $log->pushHandler(new StreamHandler("../../logs/app_workshop.log", Level::Info));
-      $insertSentence = $mysqli->prepare(query: 
-        "INSERT INTO reparations 
+      $insertSentence = $mysqli->prepare(
+        query: "INSERT INTO reparations 
           (uuid,workshop_name,license_plate,vehicle_image_filename)
         VALUES 
             (?,?,?,?);
         "
       );
-  
+
       $random_uuid = Uuid::uuid4()->toString();
-  
+
       $imageManager = new ImageManager(new Driver());
       $vehicleImage = $imageManager->read($imageFile['tmp_name']);
-      $vehicleImage->scale(height:300)->text(
+      $vehicleImage->scale(height: 300)->text(
         $licensePlate . " " . $random_uuid,
         12,
         12,
@@ -151,9 +154,9 @@ class ServiceReparation
         }
       );
       $vehicleImageOutFilename = $random_uuid . ".webp";
-  
+
       $vehicleImage->toWebp()->save(self::OUTPUT_IMAGE_PATH . $vehicleImageOutFilename);
-  
+
       $insertSentence->bind_param(
         "ssss",
         $random_uuid,
@@ -161,12 +164,11 @@ class ServiceReparation
         $licensePlate,
         $vehicleImageOutFilename
       );
-  
+
       $insertSentence->execute();
-      $log->info("INSERT reparation, ID: ". $mysqli->insert_id);
+      $log->info("INSERT reparation, ID: " . $mysqli->insert_id);
     } catch (\Throwable $th) {
-      $log->error("There has been an error inserting a reparation: ". $th->getMessage());
-      
+      $log->error("There has been an error inserting a reparation: " . $th->getMessage());
     }
 
     return $mysqli->insert_id;

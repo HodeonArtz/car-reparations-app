@@ -6,7 +6,8 @@ use Throwable;
 
 class ControllerError
 {
-  public function redirectErrorTo(string $URL, Throwable $error):void {
+  public function redirectErrorTo(string $URL, Throwable $error): void
+  {
     session_start();
     $_SESSION["error"] = [
       "type" => $error::class,
@@ -18,9 +19,10 @@ class ControllerError
     exit();
   }
 
-  public function checkErrors(): void {
+  public function checkErrors(): void
+  {
     session_start();
-    if(isset($_SESSION["error"])){
+    if (isset($_SESSION["error"])) {
       $exceptionClass = $_SESSION["error"]["type"];
       $exceptionMessage = $_SESSION["error"]["message"];
       unset($_SESSION["error"]);

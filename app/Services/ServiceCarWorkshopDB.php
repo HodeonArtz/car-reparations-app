@@ -16,13 +16,15 @@ class ServiceCarWorkshopDB
    */
   private array | bool $database_config;
 
-  public function __construct() {
+  public function __construct()
+  {
     $this->database_config = parse_ini_file("../../cfg/db_config.ini");
   }
-  public function connectDatabase(): mysqli {
+  public function connectDatabase(): mysqli
+  {
     $log = new Logger("Car_Workshop_DB_Connection");
     $log->pushHandler(new StreamHandler("../../logs/app_workshop.log", Level::Info));
-  
+
     try {
       $mysqli = new mysqli(
         $this->database_config["host"],
@@ -38,6 +40,6 @@ class ServiceCarWorkshopDB
         "There has been an error connecting with the database server."
       );
     }
-    return $mysqli; 
+    return $mysqli;
   }
 }
