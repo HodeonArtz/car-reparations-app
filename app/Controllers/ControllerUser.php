@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\UserRole;
 use App\Services\ServiceUser;
 
 class ControllerUser
@@ -15,7 +16,7 @@ class ControllerUser
   {
     if (
       !$this->serviceUser->getRole() &&
-      !$this->serviceUser->validateRole($_GET["user-role"])
+      !UserRole::tryFrom($_GET["user-role"])
     ) {
 
       header("Location: ../../public/index.php");
@@ -23,20 +24,14 @@ class ControllerUser
     }
   }
 
-  public function getCurrentRole(): string | bool
+  public function getCurrentRole(): UserRole
   {
     return $this->serviceUser->getRole();
   }
-
-  public function getFormattedRole(): string | bool
-  {
-    return ucfirst($this->serviceUser->getRole());
-  }
-
   public function setRole(): void
   {
     // if(isset($_GET["user-role"]))
-    $this->serviceUser->setRole($_GET["user-role"]);
+    $this->serviceUser->setRole(UserRole::tryFrom($_GET["user-role"]));
   }
 
   public function resetRole(): void

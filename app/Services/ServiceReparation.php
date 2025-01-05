@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Exceptions\FileException;
 use App\Models\Reparation;
+use App\Models\UserRole;
 use App\Services\ServiceCarWorkshopDB;
 use DateTime;
 use Intervention\Image\Drivers\Gd\Driver;
@@ -90,7 +91,7 @@ class ServiceReparation
       $log->warning("There has been an error selecting a reparation: " . $th->getMessage());
     }
 
-    if ($this->serviceUser->getRole() === ServiceUser::AVAILABLE_ROLES["CLIENT"]) {
+    if ($this->serviceUser->getRole() === UserRole::CLIENT) {
       $this->maskReparation($foundReparation);
     }
 

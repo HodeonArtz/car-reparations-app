@@ -34,7 +34,7 @@ class ViewNav implements ViewBaseInterface
         <div class="collapse navbar-collapse d-lg-flex flex-column flex-lg-row align-items-lg-center align-items-start"
           id="navbarSupportedContent">
           <h5 class="navbar-text order-lg-1">
-            <?= $this->controllerUser->getFormattedRole() ?>
+            <?= $this->controllerUser->getCurrentRole()?->value ?>
           </h5>
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">

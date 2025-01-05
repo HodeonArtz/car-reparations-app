@@ -7,6 +7,8 @@ require __DIR__ . '/../vendor/autoload.php';
 use App\Controllers\ControllerError;
 use App\Controllers\ControllerForm;
 use App\Controllers\ControllerUser;
+use App\Models\FormAction;
+use App\Models\UserRole;
 use App\Services\ServiceUser;
 use App\Views\ViewAlert;
 use App\Views\ViewNav;
@@ -42,12 +44,12 @@ $controllerUser->resetRole();
     <h1>Welcome!</h1>
     <?php
     try {
-      $controllerError->checkErrors(); ?>
-    <?php } catch (\Throwable $th) {
+      $controllerError->checkErrors();
+    } catch (\Throwable $th) {
       (new ViewAlert($th->getMessage(), "danger"))->render();
     } ?>
     <form action="../App/Views/ViewDashboard.php" method="GET" class=" row row-cols-lg-auto g-3 align-items-center">
-      <input type="hidden" name="form_action" value="<?= ControllerForm::ACTIONS["SELECT_ROLE"] ?>">
+      <input type="hidden" name="form_action" value="<?= FormAction::SELECT_ROLE->value ?>">
       <div class="col-12">
         <label for="userRole" class="form-label">Enter as: </label>
       </div>
@@ -55,8 +57,8 @@ $controllerUser->resetRole();
         <select name="user-role" id="userRole" class="form-select">
           <?php // Renders all the available "selectable" roles in the system 
           ?>
-          <?php foreach (ServiceUser::AVAILABLE_ROLES as $role) { ?>
-            <option value="<?= $role ?>"><?= ucfirst($role) ?></option>
+          <?php foreach (UserRole::cases() as $role) { ?>
+            <option value="<?= $role->value ?>"><?= ucfirst($role->value)   ?></option>
           <?php } ?>
         </select>
       </div>
