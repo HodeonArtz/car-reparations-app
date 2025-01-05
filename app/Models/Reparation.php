@@ -22,7 +22,7 @@ class Reparation
     DateTime $register_date,
     string $license_plate,
     string $vehicle_image_filename
-  ){
+  ) {
     $this->id = $id;
     $this->workshop_name = $workshop_name;
     $this->register_date = $register_date;
@@ -31,35 +31,45 @@ class Reparation
     $this->vehicle_image_filename = $vehicle_image_filename;
   }
 
-  public function getId() : int {
+  public function getId(): int
+  {
     return $this->id;
   }
-  public function getUUID() : UuidInterface {
+  public function getUUID(): UuidInterface
+  {
     return $this->uuid;
   }
-  public function getUUIDString() : string {
+  public function getUUIDString(): string
+  {
     return $this->uuid->toString();
   }
-  public function getWorkshopName() : string {
+  public function getWorkshopName(): string
+  {
     return $this->workshop_name;
   }
-  public function getRegisterDate(): DateTime {
+  public function getRegisterDate(): DateTime
+  {
     return $this->register_date;
   }
-  public function getFormattedRegisterDate(): string{
+  public function getFormattedRegisterDate(): string
+  {
     return $this->register_date->format("d/m/Y");
   }
 
-  public function setLicensePlate(string $license_plate) : void {
+  public function setLicensePlate(string $license_plate): void
+  {
     $this->license_plate = $license_plate;
   }
-  public function getLicensePlate(): string {
+  public function getLicensePlate(): string
+  {
     return $this->license_plate;
   }
-  public function setVehicleImageFilename(string $vehicle_image_filename) : void {
+  public function setVehicleImageFilename(string $vehicle_image_filename): void
+  {
     $this->vehicle_image_filename = $vehicle_image_filename;
   }
-  public function getVehicleImageFilename(): string {
+  public function getVehicleImageFilename(): string
+  {
     return $this->vehicle_image_filename;
   }
 }
