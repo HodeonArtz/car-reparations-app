@@ -94,7 +94,7 @@ class ServiceReparation
     if ($this->serviceUser->getRole() === UserRole::CLIENT) {
       $this->maskReparation($foundReparation);
     }
-
+    $mysqli->close();
     return $foundReparation;
   }
 
@@ -171,7 +171,8 @@ class ServiceReparation
     } catch (\Throwable $th) {
       $log->error("There has been an error inserting a reparation: " . $th->getMessage());
     }
-
-    return $mysqli->insert_id;
+    $result_id = $mysqli->insert_id;
+    $mysqli->close();
+    return $result_id;
   }
 }
