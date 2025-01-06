@@ -10,7 +10,6 @@ use App\Controllers\ControllerReparation;
 use App\Controllers\ControllerUser;
 use App\Models\FormAction;
 use App\Models\UserRole;
-use App\Services\ServiceUser;
 use App\Views\ViewReparation;
 
 $controllerError = new ControllerError();
@@ -121,7 +120,7 @@ $controllerUser->restrictPageToVisitors();
 
 <body>
 
-  <?php (new ViewNav())->render(); // Should render only once
+  <?php (new ViewNav())->render();
   ?>
 
   <main class="container py-4 d-flex flex-column gap-2">
@@ -160,7 +159,6 @@ $controllerUser->restrictPageToVisitors();
     <?php if ($controllerUser->getCurrentRole() === UserRole::EMPLOYEE) { ?>
       <hr>
       <section class="d-flex flex-column gap-3" id="register-form">
-        <!-- TODO: preview image upload -->
         <div class="form col-md-6 col-12">
           <h2>Register a reparation</h2>
           <form action="./ViewDashboard.php#register-form" method="post" enctype="multipart/form-data">
