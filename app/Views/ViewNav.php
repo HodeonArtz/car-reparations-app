@@ -5,23 +5,32 @@ namespace App\Views;
 use App\Controllers\ControllerUser;
 
 /**
- * Creates an instance of a navigation component
+ * ViewNav
+ * 
+ * Creates an instance of a Bootstrap navigation component.
+ * 
+ * @package App\Views
+ * 
+ * @implements ViewBaseInterface
+ * 
+ * @property ControllerUser $controllerUser Controller for displaying the current user
+ * role.
+ * @property string $indexPath Relative path to the /public/index.php page.
+ * @method void render() Render the navigation component.
  */
 class ViewNav implements ViewBaseInterface
 {
-  private $controllerUser;
+  private ControllerUser $controllerUser;
   private string $indexPath;
+
+  /**
+   * @param string $indexPath Relative path to the /public/index.php page.
+   */
   public function __construct(string $indexPath = "../../public/")
   {
     $this->controllerUser = new ControllerUser();
     $this->indexPath = $indexPath;
   }
-
-  /**
-   * Renders the naviagtion component 
-   * @param string $indexPath Sets the path to the index.php page
-   * @return void
-   */
   public function render(): void
   { ?>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">

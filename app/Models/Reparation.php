@@ -4,8 +4,25 @@ namespace App\Models;
 
 use DateTime;
 use Ramsey\Uuid\UuidInterface;
-use Ramsey\Uuid\Uuid;
 
+/**
+ * Reparation
+ * 
+ * @package App\Models
+ * 
+ * Creates an instance of a car reparation.
+ * 
+ * @property int $id Unique ID number of the reparation.
+ * @property UuidInterface $uuid UUID that the reparation holds.
+ * @property DateTime $register_date Date where the reparation was registered.
+ * @property string $license_plate License plate of the car.
+ * @property string $vehicle_image_filename Filename of the car image.
+ * 
+ * @method string getUUIDString() {@see Reparation::$uuid} Return the reparation UUID as
+ * a string.
+ * @method string getFormattedRegisterDate() Return the registered date with format 
+ * `"d/m/Y"`.
+ */
 class Reparation
 {
   private int $id;

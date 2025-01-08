@@ -4,18 +4,35 @@ namespace App\Views;
 
 use App\Models\Reparation;
 
+/**
+ * ViewReparation
+ * 
+ * Creates an instance of a Bootstrap card component for displaying data of a
+ * {@see \App\Models\Reparation} instance.
+ * 
+ * @package App\Views
+ * 
+ * @implements ViewBaseInterface
+ * 
+ * @property \App\Models\Reparation $reparation Reparation instance that will be 
+ * displayed with its attributes.
+ * @method void render() Renders the card component.
+ */
 class ViewReparation implements ViewBaseInterface
 {
   private Reparation $reparation;
 
+  /**
+   * @param \App\Models\Reparation $reparation Reparation instance that will be displayed
+   * with its attributes.
+   */
   public function __construct(Reparation $reparation)
   {
     $this->reparation = $reparation;
   }
 
   /**
-   * Summary of render
-   * @param mixed $f
+   * Render the Bootstrap card with the Reparation attributes as data
    * @return void
    */
   public function render(): void

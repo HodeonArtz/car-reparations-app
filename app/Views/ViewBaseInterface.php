@@ -3,14 +3,14 @@
 namespace App\Views;
 
 /**
- * Interface for HTML components
+ * ViewBaseInterface
+ * 
+ * @package App\Views
+ * 
+ * Interface for HTML components.
+ * @method void render() Render the HTML component.
  */
 interface ViewBaseInterface
 {
-  /**
-   * Renders the HTML component
-   * @return void
-   */
-  public function render() : void;
-
+  public function render(): void;
 }

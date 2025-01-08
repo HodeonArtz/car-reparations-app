@@ -2,22 +2,25 @@
 
 namespace App\Services;
 
-use App\Exceptions\InvalidRoleException;
 use App\Models\UserRole;
 
+/**
+ * ServiceUser
+ * 
+ * Service to manage users on the page.
+ * 
+ * @package App\Services
+ * 
+ * @method void setRole(UserRole $role) Set & overwrite role to user.
+ * @method \App\Models\UserRole|null getRole() Get user's current role.
+ * @method void unsetRole() Reset user's role.
+ */
 class ServiceUser
 {
-  /* public const AVAILABLE_ROLES = [
-    "EMPLOYEE" => "employee",
-    "CLIENT" => "client"
-  ];
 
-  public function validateRole(string $role): bool
-  {
-    $formattedRole = strtolower(trim($role));
-    return in_array($formattedRole, self::AVAILABLE_ROLES);
-  } */
-
+  /**
+   * @param \App\Models\UserRole $role User's role to set.
+   */
   public function setRole(UserRole $role): void
   {
     session_start();

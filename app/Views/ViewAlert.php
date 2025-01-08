@@ -3,7 +3,19 @@
 namespace App\Views;
 
 /**
- * Creates an instance of a navigation component
+ * ViewAlert
+ * 
+ * Creates an instance of a Boostrap alert component.
+ * 
+ * @package App\Views
+ * 
+ * @implements ViewBaseInterface
+ * 
+ * @property string $message Message that the alert will display.
+ * @property string $type Type of alert that the alert can be 
+ * (danger, success, warning, etc.).
+ * 
+ * @method void render() Render the alert component.
  */
 class ViewAlert implements ViewBaseInterface
 {
@@ -16,11 +28,6 @@ class ViewAlert implements ViewBaseInterface
     $this->type = $type;
   }
 
-  /**
-   * Renders the naviagtion component 
-   * @param string $indexPath Sets the path to the index.php page
-   * @return void
-   */
   public function render(): void
   {
 ?>
