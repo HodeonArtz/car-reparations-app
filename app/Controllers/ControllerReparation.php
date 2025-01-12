@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\Reparation;
 use App\Services\ServiceReparation;
+use App\Services\ServiceUser;
 
 /**
  * ControllerReparation
@@ -23,15 +24,17 @@ use App\Services\ServiceReparation;
  */
 class ControllerReparation
 {
+  private ServiceUser $serviceUser;
   private ServiceReparation $serviceReparation;
   public function __construct()
   {
     $this->serviceReparation = new ServiceReparation();
+    $this->serviceUser = new ServiceUser();
   }
   public function getReparation(): null | Reparation
   {
     $reparation_id = +$_POST["reparationId"]; // Parse parameter to integer
-    return $this->serviceReparation->getReparation($reparation_id);
+    return $this->serviceReparation->getReparation($reparation_id, $this->serviceUser->getRole());
   }
   public function insertReparation(): int
   {

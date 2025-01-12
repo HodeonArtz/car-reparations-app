@@ -26,7 +26,9 @@ class ControllerError
    */
   public function redirectErrorTo(string $URL, Throwable $error): void
   {
-    session_start();
+    if (session_status() === PHP_SESSION_NONE) {
+      session_start();
+    }
     $_SESSION["error"] = [
       "type" => $error::class,
       "message" => $error->getMessage()
@@ -39,7 +41,9 @@ class ControllerError
 
   public function checkErrors(): void
   {
-    session_start();
+    if (session_status() === PHP_SESSION_NONE) {
+      session_start();
+    }
     if (isset($_SESSION["error"])) {
       $exceptionClass = $_SESSION["error"]["type"];
       $exceptionMessage = $_SESSION["error"]["message"];

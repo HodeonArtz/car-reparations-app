@@ -6,6 +6,6 @@ create table if not exists reparations(
     workshop_name varchar(12) not null,
     register_date date not null default CURRENT_TIMESTAMP(),
     license_plate char(8) not null,
-    vehicle_image_filename varchar(255) not null
+    vehicle_image mediumblob not null
 );
 -- select * from reparations;  

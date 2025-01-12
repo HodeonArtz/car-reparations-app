@@ -37,12 +37,11 @@ class ViewReparation implements ViewBaseInterface
    */
   public function render(): void
   {
+
 ?>
     <div class="card" style="width: 18rem;">
-      <a href="../../resources/images/reparations/output-imgs/<?= $this->reparation->getVehicleImageFilename() ?>">
-        <img src="../../resources/images/reparations/output-imgs/<?= $this->reparation->getVehicleImageFilename() ?>"
-          class="card-img-top" alt="...">
-      </a>
+      <img src="data:image/jpeg;base64,<?= base64_encode($this->reparation->getVehicleImage()) ?>" class="card-img-top"
+        alt="...">
       <div class="card-body">
         <h5 class="card-title"><?= $this->reparation->getId() ?></h5>
       </div>

@@ -22,7 +22,6 @@ use Ramsey\Uuid\Uuid;
  * 
  * @package App\Services
  * 
- * @var string OUTPUT_IMAGE_PATH Specifies path to the processed uploaded images. 
  * @property array $IMG_CONFIG Contains a configuration list of constraints for uploading
  * images.
  * 
@@ -39,19 +38,16 @@ use Ramsey\Uuid\Uuid;
  */
 class ServiceReparation
 {
-  private const OUTPUT_IMAGE_PATH = "../../resources/images/reparations/output-imgs/";
 
   /**
    * @return array{maxImgBytesSize: int, validMimeFormats:string[]}
    */
   private array $IMG_CONFIG;
   private ServiceCarWorkshopDB $serviceDatabase;
-  private ServiceUser $serviceUser;
 
   public function __construct()
   {
     $this->serviceDatabase = new ServiceCarWorkshopDB();
-    $this->serviceUser = new ServiceUser();
     $this->IMG_CONFIG = json_decode(file_get_contents("../../cfg/img_config.json"), true);
   }
 
@@ -61,25 +57,6 @@ class ServiceReparation
   public function maskReparation(Reparation $reparation): void
   {
 
-    $filenamePrefix = "masked-";
-    $maskedImagePath = self::OUTPUT_IMAGE_PATH . $filenamePrefix . $reparation->getVehicleImageFilename();
-
-    // Masks the image.
-    // This code is ignored if the image was already masked before.
-    if (!file_exists($maskedImagePath)) {
-      $imageManager = new ImageManager(new Driver());
-
-      $vehicleImage = $imageManager->read(
-        self::OUTPUT_IMAGE_PATH . $reparation->getVehicleImageFilename()
-      );
-      $vehicleImage->scale(height: 300)->blur(75);
-      $vehicleImage->toWebp()->save($maskedImagePath);
-    }
-
-    $reparation->setVehicleImageFilename(
-      $filenamePrefix . $reparation->getVehicleImageFilename()
-    );
-
     $reparation->setLicensePlate(
       license_plate: substr(
         string: $reparation->getLicensePlate(),
@@ -87,12 +64,27 @@ class ServiceReparation
         length: 1
       ) . "***-***"
     );
+
+    $reparation->setUUID(null);
+
+    // Masks the image.
+    $imageManager = new ImageManager(new Driver());
+
+    $vehicleImage = $imageManager->read(
+      $reparation->getVehicleImage()
+    );
+    $vehicleImage->scale(width: 500)->blur(75);
+
+
+    $reparation->setVehicleImage(
+      $vehicleImage->toWebp()->toString()
+    );
   }
 
   /**
    * @param int $reparationId Reparation ID to fetch.
    */
-  public function getReparation(int $reparationId): Reparation | null
+  public function getReparation(int $reparationId, UserRole $userRole): Reparation | null
   {
     $log = new Logger("Car_Workshop_SELECT");
     $log->pushHandler(new StreamHandler("../../logs/app_workshop.log", Level::Info));
@@ -119,13 +111,13 @@ class ServiceReparation
         workshop_name: $response["workshop_name"],
         register_date: $register_date,
         license_plate: $response["license_plate"],
-        vehicle_image_filename: $response["vehicle_image_filename"]
+        vehicle_image: $response["vehicle_image"]
       );
     } catch (\Throwable $th) {
       $log->warning("There has been an error selecting a reparation: " . $th->getMessage());
     }
 
-    if ($this->serviceUser->getRole() === UserRole::CLIENT) {
+    if ($userRole === UserRole::CLIENT) {
       $this->maskReparation($foundReparation);
     }
     $mysqli->close();
@@ -170,7 +162,7 @@ class ServiceReparation
       // MySQL Sentence.
       $insertSentence = $mysqli->prepare(
         query: "INSERT INTO reparations 
-          (uuid,workshop_name,license_plate,vehicle_image_filename)
+          (uuid,workshop_name,license_plate,vehicle_image)
         VALUES 
             (?,?,?,?);
         "
@@ -182,7 +174,7 @@ class ServiceReparation
       // Intervention (setup image and insert text).
       $imageManager = new ImageManager(new Driver());
       $vehicleImage = $imageManager->read($imageFile['tmp_name']);
-      $vehicleImage->scale(height: 350)->text(
+      $vehicleImage->scale(width: 500)->text(
         $random_uuid . "\n" . $licensePlate,
         12,
         12,
@@ -196,9 +188,9 @@ class ServiceReparation
           $font->angle(0);
         }
       );
-      $vehicleImageOutFilename = $random_uuid . ".webp";
 
-      $vehicleImage->toWebp()->save(self::OUTPUT_IMAGE_PATH . $vehicleImageOutFilename);
+      // Inserted image as binary.
+      $vehicleImageBinary = $vehicleImage->toWebp()->toString();
 
       // Insert parameter bind and execution.
       $insertSentence->bind_param(
@@ -206,7 +198,7 @@ class ServiceReparation
         $random_uuid,
         $workshopName,
         $licensePlate,
-        $vehicleImageOutFilename
+        $vehicleImageBinary
       );
       $insertSentence->execute();
 

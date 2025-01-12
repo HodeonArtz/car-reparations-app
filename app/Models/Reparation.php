@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use DateTime;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 use Ramsey\Uuid\UuidInterface;
 
 /**
@@ -13,51 +15,59 @@ use Ramsey\Uuid\UuidInterface;
  * Creates an instance of a car reparation.
  * 
  * @property int $id Unique ID number of the reparation.
- * @property UuidInterface $uuid UUID that the reparation holds.
+ * @property UuidInterface | null $uuid UUID that the reparation holds.
  * @property DateTime $register_date Date where the reparation was registered.
  * @property string $license_plate License plate of the car.
- * @property string $vehicle_image_filename Filename of the car image.
+ * @property string $vehicle_image BLOB of the car image (binary webp file).
  * 
- * @method string getUUIDString() {@see Reparation::$uuid} Return the reparation UUID as
- * a string.
  * @method string getFormattedRegisterDate() Return the registered date with format 
  * `"d/m/Y"`.
  */
 class Reparation
 {
   private int $id;
-  private UuidInterface $uuid;
+  private UuidInterface | null $uuid;
   private string $workshop_name;
   private DateTime $register_date;
   private string $license_plate;
-  private string $vehicle_image_filename;
+  private string $vehicle_image;
 
   public function __construct(
     int $id,
-    UuidInterface $uuid,
+    UuidInterface | null $uuid,
     string $workshop_name,
     DateTime $register_date,
     string $license_plate,
-    string $vehicle_image_filename
+    string $vehicle_image
   ) {
     $this->id = $id;
     $this->workshop_name = $workshop_name;
     $this->register_date = $register_date;
     $this->license_plate = $license_plate;
     $this->uuid = $uuid;
-    $this->vehicle_image_filename = $vehicle_image_filename;
+    $this->vehicle_image = $vehicle_image;
   }
 
   public function getId(): int
   {
     return $this->id;
   }
-  public function getUUID(): UuidInterface
+
+  public function setUUID(UuidInterface | null $uuid): void
+  {
+    $this->uuid = $uuid;
+  }
+  public function getUUID(): UuidInterface | null
   {
     return $this->uuid;
   }
   public function getUUIDString(): string
   {
+    // If reparation has no UUID (probably meaning that it has been masked) show this
+    // string of asterisks.
+    if ($this->uuid === null)
+      return "********-****-****-****-************";
+
     return $this->uuid->toString();
   }
   public function getWorkshopName(): string
@@ -81,12 +91,12 @@ class Reparation
   {
     return $this->license_plate;
   }
-  public function setVehicleImageFilename(string $vehicle_image_filename): void
+  public function setVehicleImage(string $vehicle_image_filename): void
   {
-    $this->vehicle_image_filename = $vehicle_image_filename;
+    $this->vehicle_image = $vehicle_image_filename;
   }
-  public function getVehicleImageFilename(): string
+  public function getVehicleImage(): string
   {
-    return $this->vehicle_image_filename;
+    return $this->vehicle_image;
   }
 }

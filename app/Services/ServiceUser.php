@@ -23,14 +23,19 @@ class ServiceUser
    */
   public function setRole(UserRole $role): void
   {
-    session_start();
+    if (session_status() === PHP_SESSION_NONE) {
+      session_start();
+    }
     $_SESSION["role"] = serialize($role);
     session_write_close();
   }
 
   public function getRole(): UserRole | null
   {
-    session_start();
+    if (session_status() === PHP_SESSION_NONE) {
+      session_start();
+    }
+
     $role = null;
     if (isset($_SESSION["role"])) $role = unserialize($_SESSION["role"]);
     session_write_close();

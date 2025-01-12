@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Views;
 
 require __DIR__ . '\\..\\..\\vendor\\autoload.php';
@@ -12,8 +13,8 @@ use App\Models\FormAction;
 use App\Models\UserRole;
 use App\Views\ViewReparation;
 
-$controllerError = new ControllerError();
 $controllerUser = new ControllerUser();
+$controllerError = new ControllerError();
 $controllerForm = new ControllerForm();
 $controllerReparation = new ControllerReparation();
 
@@ -100,24 +101,26 @@ $controllerForm->handleForm(
 $controllerUser->restrictPageToVisitors();
 
 
+// Session start before header
+$currentUserRole = $controllerUser->getCurrentRole();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
   <?php (new ViewHeadLayout())->render(); ?>
-  <title><?= $controllerUser->getCurrentRole()?->value ?></title>
+  <title><?= $currentUserRole?->value ?></title>
 
 </head>
 
 <body>
 
-  <?php (new ViewNav())->render();
-  ?>
+  <?php (new ViewNav())->render(); ?>
 
   <main class="container py-4 d-flex flex-column gap-2">
     <h1 class="mb-3">
-      <?= $controllerUser->getCurrentRole()?->value ?>'s dashboard
+      <?= $currentUserRole?->value ?>'s dashboard
     </h1>
     <?php
     foreach ($errorAlerts as $errorAlert) {
@@ -148,7 +151,7 @@ $controllerUser->restrictPageToVisitors();
         ?>
       </div>
     </section>
-    <?php if ($controllerUser->getCurrentRole() === UserRole::EMPLOYEE) { ?>
+    <?php if ($currentUserRole === UserRole::EMPLOYEE) { ?>
       <hr>
       <section class="d-flex flex-column gap-3" id="register-form">
         <div class="form col-md-6 col-12">
