@@ -73,7 +73,7 @@ class ServiceReparation
     $vehicleImage = $imageManager->read(
       $reparation->getVehicleImage()
     );
-    $vehicleImage->scale(width: 500)->blur(75);
+    $vehicleImage->scale(width: 450)->blur(75);
 
 
     $reparation->setVehicleImage(
@@ -174,7 +174,7 @@ class ServiceReparation
       // Intervention (setup image and insert text).
       $imageManager = new ImageManager(new Driver());
       $vehicleImage = $imageManager->read($imageFile['tmp_name']);
-      $vehicleImage->scale(width: 500)->text(
+      $vehicleImage->scale(width: 1000)->text(
         $random_uuid . "\n" . $licensePlate,
         12,
         12,
