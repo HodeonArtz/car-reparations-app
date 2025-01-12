@@ -1,4 +1,4 @@
-# Car reparations project
+# Car Workshop project
 
 This is an application to manage and see car reparations from workshops.
 
