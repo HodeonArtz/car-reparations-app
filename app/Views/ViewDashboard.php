@@ -80,15 +80,15 @@ $handleInsertReparation = function (): void {
   global $showInsertSuccessMessage;
   global $errorAlerts;
 
-  try {
-    $insertedReparationId = $controllerReparation->insertReparation();
-    $showInsertSuccessMessage = true;
-  } catch (\Throwable $th) {
+  /* try { */
+  $insertedReparationId = $controllerReparation->insertReparation();
+  $showInsertSuccessMessage = true;
+  /* } catch (\Throwable $th) {
     array_push(
       $errorAlerts,
       new ViewAlert($th->getMessage(), "danger")
     );
-  }
+  } */
 };
 
 $controllerForm->handleForm(

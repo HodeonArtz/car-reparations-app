@@ -41,10 +41,14 @@ class ControllerReparation
   {
     $registerDate = new DateTime($_POST["add_register_date"]);
     return $this->serviceReparation->insertReparation(
-      imageFile: $_FILES["vehicle_image_upload"],
-      workshopName: $_POST["add_workshop_name"],
-      licensePlate: $_POST["add_license_plate"],
-      registerDate: $registerDate
+      reparation: new Reparation(
+        id: 0,
+        uuid: null,
+        vehicle_image: file_get_contents($_FILES["vehicle_image_upload"]["tmp_name"]),
+        workshop_name: $_POST["add_workshop_name"],
+        license_plate: $_POST["add_license_plate"],
+        register_date: $registerDate
+      )
     );
   }
 }
