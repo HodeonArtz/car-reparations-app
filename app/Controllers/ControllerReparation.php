@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\Reparation;
 use App\Services\ServiceReparation;
 use App\Services\ServiceUser;
+use DateTime;
 
 /**
  * ControllerReparation
@@ -38,10 +39,12 @@ class ControllerReparation
   }
   public function insertReparation(): int
   {
+    $registerDate = new DateTime($_POST["add_register_date"]);
     return $this->serviceReparation->insertReparation(
       imageFile: $_FILES["vehicle_image_upload"],
       workshopName: $_POST["add_workshop_name"],
-      licensePlate: $_POST["add_license_plate"]
+      licensePlate: $_POST["add_license_plate"],
+      registerDate: $registerDate
     );
   }
 }

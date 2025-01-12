@@ -134,7 +134,8 @@ class ServiceReparation
   public function insertReparation(
     array $imageFile,
     string $workshopName,
-    string $licensePlate
+    string $licensePlate,
+    DateTime $registerDate
   ): int {
     // Throw exception if the file doesn't have a valid image format.
     if (!in_array(
@@ -162,9 +163,9 @@ class ServiceReparation
       // MySQL Sentence.
       $insertSentence = $mysqli->prepare(
         query: "INSERT INTO reparations 
-          (uuid,workshop_name,license_plate,vehicle_image)
+          (uuid,workshop_name,license_plate,vehicle_image,register_date)
         VALUES 
-            (?,?,?,?);
+            (?,?,?,?,?);
         "
       );
 
@@ -189,16 +190,20 @@ class ServiceReparation
         }
       );
 
+      // Formatted register reparation date.
+      $formattedRegisterDate = $registerDate->format('Y-m-d');
+
       // Inserted image as binary.
       $vehicleImageBinary = $vehicleImage->toWebp()->toString();
 
       // Insert parameter bind and execution.
       $insertSentence->bind_param(
-        "ssss",
+        "sssss",
         $random_uuid,
         $workshopName,
         $licensePlate,
-        $vehicleImageBinary
+        $vehicleImageBinary,
+        $formattedRegisterDate
       );
       $insertSentence->execute();
 

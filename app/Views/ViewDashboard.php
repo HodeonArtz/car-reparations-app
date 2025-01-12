@@ -168,7 +168,11 @@ $currentUserRole = $controllerUser->getCurrentRole();
                 id="add_workshop_name" placeholder="Enter workshop's name">
             </div>
             <div class="mb-3">
-              <label for="add_license_plate" class="form-label">License name</label>
+              <label for="register_date" class="form-label">Reparation register date</label>
+              <input type="date" required class="form-control" name="add_register_date" id="register_date">
+            </div>
+            <div class="mb-3">
+              <label for="add_license_plate" class="form-label">License plate</label>
               <input type="text" required maxlength="8" class="form-control" name="add_license_plate"
                 id="add_license_plate" placeholder="Example: 1234-ABC">
             </div>

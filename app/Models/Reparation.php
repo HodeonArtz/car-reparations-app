@@ -33,8 +33,8 @@ class Reparation
   private string $vehicle_image;
 
   public function __construct(
-    int $id,
-    UuidInterface | null $uuid,
+    int $id = 0,
+    UuidInterface | null $uuid = null,
     string $workshop_name,
     DateTime $register_date,
     string $license_plate,
