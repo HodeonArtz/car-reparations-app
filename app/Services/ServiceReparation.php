@@ -115,6 +115,7 @@ class ServiceReparation
       );
     } catch (\Throwable $th) {
       $log->warning("There has been an error selecting a reparation: " . $th->getMessage());
+      throw $th;
     }
 
     if ($userRole === UserRole::CLIENT) {
@@ -201,6 +202,7 @@ class ServiceReparation
       $log->info("INSERT reparation, ID: " . $mysqli->insert_id);
     } catch (\Throwable $th) {
       $log->error("There has been an error inserting a reparation: " . $th->getMessage());
+      throw $th;
     }
 
     $result_id = $mysqli->insert_id;
