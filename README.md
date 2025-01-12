@@ -18,7 +18,6 @@ This is an application to manage and see car reparations from workshops.
 - Composer
 - PHP **^8.2**
 - MariaDB **10.4.28** (MySQL)
--
 
 ### Dependencies
 
@@ -28,6 +27,8 @@ This is an application to manage and see car reparations from workshops.
 - Ramsey UUID **^4.7**
 
 ## Installation
+
+Follow the following steps to setup the app for developement.
 
 1. Clone the repoository:
 
@@ -77,4 +78,4 @@ db_name=car_workshop ; MySQL database name
 }
 ```
 
-6. Open your project on your preferred project.
+6. Open your project on your preferred web server.
